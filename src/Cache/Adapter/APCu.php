@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Difra\Cache;
 
 use Difra\Cache;
+use Difra\Cache\Adapter\Common;
 
 class APCu extends Common
 {

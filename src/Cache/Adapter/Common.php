@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Difra\Cache;
+namespace Difra\Cache\Adapter;
 
 use Difra\Cache;
+use Difra\Cache\CacheInterface;
 use Difra\Envi;
 use Difra\Exception;
 
 /**
  * Abstract cache adapter class
  */
-abstract class Common
+abstract class Common implements CacheInterface
 {
     //abstract static public function isAvailable();
 
@@ -85,7 +86,7 @@ abstract class Common
      * @param mixed $data
      * @param int $ttl
      */
-    public function put(string $key, mixed $data, int $ttl = 300): void
+    public function put(string $key, mixed $data, int $ttl = self::DEFAULT_TTL): void
     {
         $data = [
             'expires' => time() + $ttl,
@@ -120,7 +121,7 @@ abstract class Common
 
     /**
      * Set session handler to use current cache, if available
-     * @throws \Difra\Exception
+     * @throws \Difra\Cache\Exception
      */
     public function setSessionsInCache()
     {
@@ -132,7 +133,7 @@ abstract class Common
             return;
         }
 
-        session_set_save_handler(
+        \session_set_save_handler(
         // open
             function ($s, $n) {
                 return true;

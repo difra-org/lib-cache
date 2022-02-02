@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Difra\Cache;
+namespace Difra\Cache\Adapter;
 
 use Difra\Cache;
 use Difra\Exception;
@@ -59,7 +59,7 @@ class MemCached extends Common
      */
     public function realGet(string $id, bool $doNotTestCacheValidity = false): mixed
     {
-        $data = @self::$memcache->get($id);
+        $data = self::$memcache->get($id);
         return self::$serialize ? @unserialize($data) : $data;
     }
 

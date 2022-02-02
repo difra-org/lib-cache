@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Difra\Cache;
+namespace Difra\Cache\Adapter;
 
 use Difra\Cache;
 

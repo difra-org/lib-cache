@@ -1,0 +1,2 @@
+8.0.1
+ * Changed thrown exception from \Difra\Exception to \Difra\Cache\Exception

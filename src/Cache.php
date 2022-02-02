@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Difra;
 
+use Difra\Cache\CacheInterface;
+
 /**
  * Cache factory
  * Class Cache
@@ -35,10 +37,10 @@ class Cache
      * Builds new cache adapter or returns
      * existing one.
      * @param string $configName
-     * @return \Difra\Cache\APCu|\Difra\Cache\MemCache|\Difra\Cache\MemCached|\Difra\Cache\None
-     * @throws \Difra\Exception
+     * @return \Difra\Cache\CacheInterface
+     * @throws \Difra\Cache\Exception
      */
-    public static function getInstance(string $configName = self::INST_DEFAULT): Cache\APCu|Cache\MemCache|Cache\MemCached|Cache\None
+    public static function getInstance(string $configName = self::INST_DEFAULT): CacheInterface
     {
         if ($configName == self::INST_AUTO) {
             $configName = self::detect();
@@ -63,10 +65,10 @@ class Cache
         if (Cache\APCu::isAvailable()) {
             Debugger::addLine('Auto-detected cache type: APCu');
             return $autoDetected = self::INST_APCU;
-        } elseif (Cache\MemCached::isAvailable()) {
+        } elseif (Cache\Adapter\MemCached::isAvailable()) {
             Debugger::addLine('Auto-detected cache type: MemCached');
             return $autoDetected = self::INST_MEMCACHED;
-        } elseif (Cache\MemCache::isAvailable()) {
+        } elseif (Cache\Adapter\MemCache::isAvailable()) {
             Debugger::addLine('Auto-detected cache type: Memcache');
             return $autoDetected = self::INST_MEMCACHE;
         }
@@ -77,10 +79,10 @@ class Cache
     /**
      * Factory
      * @param string $configName
-     * @return \Difra\Cache\APCu|\Difra\Cache\MemCached|\Difra\Cache\MemCache|\Difra\Cache\None
-     * @throws \Difra\Exception
+     * @return \Difra\Cache\CacheInterface
+     * @throws \Difra\Cache\Exception
      */
-    private static function getAdapter(string $configName): Cache\APCu|Cache\MemCached|Cache\MemCache|Cache\None
+    private static function getAdapter(string $configName): CacheInterface
     {
         if (isset(self::$adapters[$configName])) {
             return self::$adapters[$configName];
@@ -88,10 +90,10 @@ class Cache
 
         return match ($configName) {
             self::INST_APCU => self::$adapters[$configName] = new Cache\APCu(),
-            self::INST_MEMCACHED => self::$adapters[$configName] = new Cache\MemCached(),
-            self::INST_MEMCACHE => self::$adapters[$configName] = new Cache\MemCache(),
-            self::INST_NONE => self::$adapters[$configName] = new Cache\None(),
-            default => throw new Exception("Unknown cache adapter type: $configName"),
+            self::INST_MEMCACHED => self::$adapters[$configName] = new Cache\Adapter\MemCached(),
+            self::INST_MEMCACHE => self::$adapters[$configName] = new Cache\Adapter\MemCache(),
+            self::INST_NONE => self::$adapters[$configName] = new Cache\Adapter\None(),
+            default => throw new \Difra\Cache\Exception("Unknown cache adapter type: $configName"),
         };
     }
 }
