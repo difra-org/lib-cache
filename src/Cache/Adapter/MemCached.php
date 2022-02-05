@@ -60,7 +60,10 @@ class MemCached extends Common
     public function realGet(string $id, bool $doNotTestCacheValidity = false): mixed
     {
         $data = self::$memcache->get($id);
-        return self::$serialize ? @unserialize($data) : $data;
+        if ($data && is_string($data) && self::$serialize) {
+            return @unserialize($data);
+        }
+        return $data;
     }
 
     /**
