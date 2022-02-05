@@ -39,7 +39,7 @@ class MemCached extends Common
 
             $memcache = new \MemCached();
             // todo: load from config
-            $memcache->addServer('127.0.0.1', '11211');
+            $memcache->addServer('127.0.0.1', 11211);
             // if ($memcache->getStats() < 0) { // returns ['127.0.0.1:11211'=>['pid'=>-1,...]]
             //     return self::$memcache = false;
             // }
