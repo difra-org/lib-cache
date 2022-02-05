@@ -62,7 +62,7 @@ class Cache
             Debugger::addLine('Caching disabled by Debug Mode settings');
             return $autoDetected = self::INST_NONE;
         }
-        if (Cache\APCu::isAvailable()) {
+        if (Cache\Adapter\APCu::isAvailable()) {
             Debugger::addLine('Auto-detected cache type: APCu');
             return $autoDetected = self::INST_APCU;
         } elseif (Cache\Adapter\MemCached::isAvailable()) {
@@ -89,7 +89,7 @@ class Cache
         }
 
         return match ($configName) {
-            self::INST_APCU => self::$adapters[$configName] = new Cache\APCu(),
+            self::INST_APCU => self::$adapters[$configName] = new Cache\Adapter\APCu(),
             self::INST_MEMCACHED => self::$adapters[$configName] = new Cache\Adapter\MemCached(),
             self::INST_MEMCACHE => self::$adapters[$configName] = new Cache\Adapter\MemCache(),
             self::INST_NONE => self::$adapters[$configName] = new Cache\Adapter\None(),
